@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.3.xsd" >
+
+<!-- un bloc bean pour le dao en version simu -->
+<bean id="daoClientSimu" class="com.sopra.resa.dao.simu.DaoClientSimu">
+</bean> 
+
+<bean id="daoClientHibernate" class="com.sopra.resa.dao.hibernate.DaoClientHibernate">
+</bean>
+
+<!-- un bloc bean pour le serviceClient avec injection du dao -->
+<bean id="serviceClientImpl" init-method="initAfterInject" class="com.sopra.resa.service.ServiceClientImpl">
+   <!-- <property name="daoClient" ref="daoClientSimu" /> -->
+    <property name="daoClient" ref="daoClientHibernate" /> 
+</bean>
+
+<!--   <context:annotation-config/> -->
+
+</beans>

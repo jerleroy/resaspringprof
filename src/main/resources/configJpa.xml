@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<bean id="myDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/customers-db" />
+		<property name="username" value="postgres" />
+		<property name="password" value="postgres" /> <!-- "postgres" ou "root" ou ... -->
+	</bean>
+	
+	<!-- la config JPA integree a spring est soit entierement ici 
+	     soit en partie dans srm/main/resources/META-INF/persistence.xml -->
+	<bean id="myEmf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="myDataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" >
+			      <property name="databasePlatform" 
+		                    value="org.hibernate.dialect.PostgreSQLDialect" />
+		          <!-- <property name="hibernate.hbm2ddl.auto" value="update" /> -->
+		          <property name="showSql" value="false" />
+		           <!--  <property name="generateDdl" value="true" /> -->
+			</bean>
+		</property>
+		
+	</bean>
+
+    <!-- pour @Transactional: -->
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="myEmf" />
+	</bean>
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>
